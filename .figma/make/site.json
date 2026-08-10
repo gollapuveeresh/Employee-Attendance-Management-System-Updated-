@@ -1,0 +1,10 @@
+{
+  "description": "Streamline project creation with an intuitive interface that simplifies task management and boosts team productivity for professionals and creatives.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
