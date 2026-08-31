@@ -1,0 +1,31 @@
+﻿version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: vpd_postgres_db
+    environment:
+      POSTGRES_DB: vpd_attendance_db
+      POSTGRES_USER: vpd_user
+      POSTGRES_PASSWORD: vpd_secure_password_2026
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  backend:
+    build: .
+    container_name: vpd_backend_api
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    environment:
+      - DJANGO_DEBUG=True
+      - DB_NAME=vpd_attendance_db
+      - DB_USER=vpd_user
+      - DB_PASSWORD=vpd_secure_password_2026
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+volumes:
+  postgres_data:
