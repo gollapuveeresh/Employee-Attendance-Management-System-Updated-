@@ -112,9 +112,23 @@ export default function Contact() {
 
               <div className="space-y-8">
                 {[
-                  { icon: <><rect x="3" y="5" width="18" height="14" rx="2" ry="2"/><polyline points="3 7 12 13 21 7"/></>, title: 'Email', detail: 'contact@vpdtechnologies.com' },
-                  { icon: <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>, title: 'Phone', detail: '+1 (555) 123-4567' },
-                  { icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></>, title: 'Office', detail: 'Tech Hub Building, Suite 400\nSan Francisco, CA 94107' }
+                  { 
+                    icon: <><rect x="3" y="5" width="18" height="14" rx="2" ry="2"/><polyline points="3 7 12 13 21 7"/></>, 
+                    title: 'Email', 
+                    detail: 'hrvpd@vpdtechnologiespvtltd.com',
+                    href: 'mailto:hrvpd@vpdtechnologiespvtltd.com'
+                  },
+                  { 
+                    icon: <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>, 
+                    title: 'Phone', 
+                    detail: '+91 99499 46022',
+                    href: 'tel:+919949946022'
+                  },
+                  { 
+                    icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></>, 
+                    title: 'Office', 
+                    detail: 'VPD Technologies Pvt Ltd\n3rd Floor, Above State Bank of India (SBI),\nBalaji Nagar, Nandyal Checkpost,\nKurnool, Andhra Pradesh 518006,\nIndia.'
+                  }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="w-12 h-12 rounded-xl bg-[#111111] border border-[#2A2A2A] flex items-center justify-center text-[#D4AF37] shrink-0">
@@ -122,7 +136,13 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="text-white font-medium mb-1">{item.title}</h4>
-                      <p className="text-gray-400 text-sm whitespace-pre-line">{item.detail}</p>
+                      {item.href ? (
+                        <a href={item.href} className="text-gray-400 text-sm whitespace-pre-line hover:text-[#D4AF37] transition-colors">
+                          {item.detail}
+                        </a>
+                      ) : (
+                        <p className="text-gray-400 text-sm whitespace-pre-line">{item.detail}</p>
+                      )}
                     </div>
                   </div>
                 ))}
