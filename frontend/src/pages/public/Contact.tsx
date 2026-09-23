@@ -11,6 +11,16 @@ export default function Contact() {
     if (!formData.email) newErrors.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Invalid email format'
     if (!formData.message) newErrors.message = 'Message is required'
+
+    if (formData.phone) {
+      const national = formData.phone.substring(3)
+      if (national.length !== 10) {
+        newErrors.phone = 'Phone number must be exactly 10 digits'
+      } else if (!/^[6-9]\d{9}$/.test(national)) {
+        newErrors.phone = 'Invalid Indian mobile number'
+      }
+    }
+
     return newErrors
   }
 
@@ -33,6 +43,36 @@ export default function Contact() {
       // Reset success message after 5 seconds
       setTimeout(() => setStatus('idle'), 5000)
     }, 1500)
+  }
+
+  const formatPhoneForDisplay = (phone: string) => {
+    if (!phone) return ''
+    const national = phone.substring(3)
+    if (national.length <= 5) return `+91 ${national}`
+    return `+91 ${national.slice(0,5)} ${national.slice(5)}`
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    if (val === '+91 ' || val === '+91' || val === '+9' || val === '+') {
+      setFormData(prev => ({ ...prev, phone: '' }))
+      if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }))
+      return
+    }
+
+    const cleaned = val.replace(/[^\d+]/g, '')
+    let national = cleaned
+    if (cleaned.startsWith('+91')) {
+      national = cleaned.substring(3)
+    } else if (cleaned.startsWith('+')) {
+      national = cleaned.replace(/\+/g, '')
+    }
+    national = national.substring(0, 10)
+    
+    const toStore = national.length > 0 ? `+91${national}` : ''
+    
+    setFormData(prev => ({ ...prev, phone: toStore }))
+    if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }))
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -140,11 +180,13 @@ export default function Contact() {
                         <input
                           type="tel"
                           name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          className="w-full bg-[#1A1A1A] border border-[#333333] focus:border-[#D4AF37] rounded-xl px-4 py-3 text-white outline-none transition-colors"
-                          placeholder="+1 (555) 000-0000"
+                          value={formData.phone ? formatPhoneForDisplay(formData.phone) : ''}
+                          onChange={handlePhoneChange}
+                          className={`w-full bg-[#1A1A1A] border ${errors.phone ? 'border-[#ef4444]' : 'border-[#333333] focus:border-[#D4AF37]'} rounded-xl px-4 py-3 text-white outline-none transition-colors`}
+                          placeholder="+91 98765 43210"
+                          aria-label="Phone Number"
                         />
+                        {errors.phone && <p className="text-[#ef4444] text-xs">{errors.phone}</p>}
                       </div>
                       
                       <div className="space-y-2">
