@@ -147,6 +147,43 @@ export default function Contact() {
                   </div>
                 ))}
               </div>
+
+              {/* Our Location Map */}
+              <div className="animate-fade-up group">
+                <h4 className="font-heading text-xl font-bold text-white mb-6">Our Location</h4>
+                <div className="bg-[#111111] border border-[#2A2A2A] rounded-2xl overflow-hidden group-hover:border-[#D4AF37]/50 transition-all duration-300 shadow-lg relative">
+                  <div className="h-[250px] lg:h-[300px] w-full bg-[#1A1A1A] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                    {/* Background Grid Pattern */}
+                    <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#D4AF37 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                    
+                    <div className="w-16 h-16 rounded-full bg-[#111111] border-2 border-[#D4AF37] flex items-center justify-center text-[#D4AF37] mb-4 relative z-10 group-hover:-translate-y-1 transition-transform duration-300 shadow-[0_0_15px_rgba(212,175,55,0.15)]">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    
+                    <h3 className="text-white font-medium text-lg mb-2 relative z-10">VPD Technologies</h3>
+                    <p className="text-gray-400 text-sm mb-6 relative z-10 max-w-[250px]">
+                      Kurnool, Andhra Pradesh 518006, India
+                    </p>
+                    
+                    <a 
+                      href="https://maps.app.goo.gl/cWHVsxeBRjufGEtR6" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="relative z-10 px-6 py-2.5 bg-[#D4AF37] text-[#0A0A0A] font-bold rounded-xl hover:bg-[#E8CB5A] transition-colors flex items-center gap-2 text-sm shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+                    >
+                      View on Google Maps
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Contact Form */}
