@@ -59,7 +59,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   border: 1px solid rgba(42, 42, 42, 0.8);
 }
 
-/* Subtle animation */
 @keyframes pulse-gold {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
@@ -72,7 +71,37 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
 
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-down { animation: fade-down 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in { animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-in-right { animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
 }
 .animate-spin-slow { animation: spin-slow 3s linear infinite; }
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
