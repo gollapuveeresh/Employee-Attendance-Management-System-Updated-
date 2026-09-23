@@ -20,7 +20,17 @@ import RolesPermissionsPage from './pages/admin/RolesPermissionsPage'
 import ReportsPage from './pages/admin/ReportsPage'
 import CompanyManagementPage from './pages/admin/CompanyManagementPage'
 
-export type Screen = 'splash' | 'login' | 'forgot' | 'otp' | 'reset' | 'app'
+// Public Pages
+import PublicLayout from './components/public/PublicLayout'
+import { PublicPage } from './components/public/Navbar'
+import Home from './pages/public/Home'
+import About from './pages/public/About'
+import Features from './pages/public/Features'
+import Solutions from './pages/public/Solutions'
+import Contact from './pages/public/Contact'
+import FAQ from './pages/public/FAQ'
+
+export type Screen = 'splash' | 'public' | 'login' | 'forgot' | 'otp' | 'reset' | 'app'
 export type Role = 'employee' | 'hr' | 'admin'
 export type Page =
   | 'dashboard'
@@ -83,6 +93,7 @@ import { authApi } from './api/auth'
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash')
   const [page, setPage] = useState<Page>('dashboard')
+  const [publicPage, setPublicPage] = useState<PublicPage>('home')
   const [user, setUser] = useState<AppUser | null>(null)
   const [forgotEmail, setForgotEmail] = useState('')
 
@@ -94,7 +105,7 @@ export default function App() {
       } catch {}
     }
     const timer = setTimeout(() => {
-      setScreen(saved ? 'app' : 'login')
+      setScreen(saved ? 'app' : 'public')
     }, 2400)
     return () => clearTimeout(timer)
   }, [])
@@ -137,6 +148,25 @@ export default function App() {
   }
 
   if (screen === 'splash') return <SplashScreen />
+  
+  if (screen === 'public') {
+    const renderPublicPage = () => {
+      switch (publicPage) {
+        case 'about': return <About />
+        case 'features': return <Features />
+        case 'solutions': return <Solutions />
+        case 'contact': return <Contact />
+        case 'faq': return <FAQ />
+        default: return <Home onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
+      }
+    }
+    return (
+      <PublicLayout page={publicPage} setPage={setPublicPage} onLoginClick={() => setScreen('login')}>
+        {renderPublicPage()}
+      </PublicLayout>
+    )
+  }
+
   if (screen === 'login')
     return (
       <LoginPage
