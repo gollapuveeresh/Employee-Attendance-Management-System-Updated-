@@ -1,4 +1,5 @@
 import { PublicPage } from '../../components/public/Navbar'
+import mdPhoto from '../../assets/saisirmd1.png'
 
 interface AboutProps {
   onGetStarted: () => void
@@ -61,7 +62,7 @@ export default function About({ onGetStarted, setPage }: AboutProps) {
                 
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/5] md:aspect-[3/4] w-full bg-[#1A1A1A]">
                   <img 
-                    src="/assets/saisirmd1.png" 
+                    src={mdPhoto} 
                     alt="Vuppala Sai Krishna - CEO & Founder" 
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
