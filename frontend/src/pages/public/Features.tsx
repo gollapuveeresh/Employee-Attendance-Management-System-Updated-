@@ -2,6 +2,7 @@ import { PublicPage } from '../../components/public/Navbar'
 import AttendanceVisual from '../../components/public/AttendanceVisual'
 import LeaveVisual from '../../components/public/LeaveVisual'
 import EmployeeVisual from '../../components/public/EmployeeVisual'
+import RoleVisual from '../../components/public/RoleVisual'
 interface FeaturesProps {
   onGetStarted: () => void
   setPage: (p: PublicPage) => void
@@ -104,6 +105,8 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                     <LeaveVisual />
                   ) : feature.id === 'employee' ? (
                     <EmployeeVisual />
+                  ) : feature.id === 'roles' ? (
+                    <RoleVisual />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
