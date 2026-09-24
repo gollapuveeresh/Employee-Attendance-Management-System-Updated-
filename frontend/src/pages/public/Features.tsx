@@ -1,4 +1,5 @@
 import { PublicPage } from '../../components/public/Navbar'
+import AttendanceVisual from '../../components/public/AttendanceVisual'
 
 interface FeaturesProps {
   onGetStarted: () => void
@@ -94,41 +95,47 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                   <p className="text-gray-400 text-lg leading-relaxed">{feature.desc}</p>
                 </div>
 
-                {/* Visual Representation (Abstracted Mockup) */}
+                {/* Visual Representation */}
                 <div className="flex-1 w-full relative">
-                  <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="relative rounded-2xl border border-[#2A2A2A] bg-[#111111] p-6 shadow-2xl overflow-hidden group-hover:-translate-y-2 transition-transform duration-500">
-                    {/* Mock Window Controls */}
-                    <div className="flex gap-2 mb-6">
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#333333]" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#333333]" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#333333]" />
-                    </div>
-                    {/* Abstract Content Lines */}
-                    <div className="space-y-4">
-                      <div className="w-3/4 h-6 rounded-md bg-[#1E1E1E]" />
-                      <div className="w-1/2 h-4 rounded-md bg-[#1E1E1E]" />
-                      
-                      <div className="pt-4 grid grid-cols-2 gap-4">
-                        <div className="h-20 rounded-lg bg-[#171717] border border-[#1E1E1E] p-3 flex flex-col justify-end">
-                           <div className="w-2/3 h-2 rounded bg-[#333333]" />
+                  {feature.id === 'attendance' ? (
+                    <AttendanceVisual />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                      <div className="relative rounded-2xl border border-[#2A2A2A] bg-[#111111] p-6 shadow-2xl overflow-hidden group-hover:-translate-y-2 transition-transform duration-500">
+                        {/* Mock Window Controls */}
+                        <div className="flex gap-2 mb-6">
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#333333]" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#333333]" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#333333]" />
                         </div>
-                        <div className="h-20 rounded-lg bg-[#171717] border border-[#1E1E1E] p-3 flex flex-col justify-end">
-                           <div className="w-1/2 h-2 rounded bg-[#D4AF37]/40" />
-                        </div>
-                      </div>
-
-                      <div className="pt-4 space-y-2">
-                        {[1,2,3].map(i => (
-                          <div key={i} className="flex items-center gap-3 w-full p-2 rounded bg-[#171717]">
-                             <div className="w-6 h-6 rounded-full bg-[#2A2A2A] shrink-0" />
-                             <div className="w-full h-2 rounded bg-[#2A2A2A]" />
-                             <div className="w-12 h-2 rounded bg-[#333333]" />
+                        {/* Abstract Content Lines */}
+                        <div className="space-y-4">
+                          <div className="w-3/4 h-6 rounded-md bg-[#1E1E1E]" />
+                          <div className="w-1/2 h-4 rounded-md bg-[#1E1E1E]" />
+                          
+                          <div className="pt-4 grid grid-cols-2 gap-4">
+                            <div className="h-20 rounded-lg bg-[#171717] border border-[#1E1E1E] p-3 flex flex-col justify-end">
+                               <div className="w-2/3 h-2 rounded bg-[#333333]" />
+                            </div>
+                            <div className="h-20 rounded-lg bg-[#171717] border border-[#1E1E1E] p-3 flex flex-col justify-end">
+                               <div className="w-1/2 h-2 rounded bg-[#D4AF37]/40" />
+                            </div>
                           </div>
-                        ))}
+
+                          <div className="pt-4 space-y-2">
+                            {[1,2,3].map(i => (
+                              <div key={i} className="flex items-center gap-3 w-full p-2 rounded bg-[#171717]">
+                                 <div className="w-6 h-6 rounded-full bg-[#2A2A2A] shrink-0" />
+                                 <div className="w-full h-2 rounded bg-[#2A2A2A]" />
+                                 <div className="w-12 h-2 rounded bg-[#333333]" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
 
               </div>
