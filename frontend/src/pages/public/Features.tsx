@@ -1,5 +1,6 @@
 import { PublicPage } from '../../components/public/Navbar'
 import AttendanceVisual from '../../components/public/AttendanceVisual'
+import LeaveVisual from '../../components/public/LeaveVisual'
 
 interface FeaturesProps {
   onGetStarted: () => void
@@ -99,6 +100,8 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                 <div className="flex-1 w-full relative">
                   {feature.id === 'attendance' ? (
                     <AttendanceVisual />
+                  ) : feature.id === 'leave' ? (
+                    <LeaveVisual />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
