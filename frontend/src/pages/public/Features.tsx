@@ -3,6 +3,8 @@ import AttendanceVisual from '../../components/public/AttendanceVisual'
 import LeaveVisual from '../../components/public/LeaveVisual'
 import EmployeeVisual from '../../components/public/EmployeeVisual'
 import RoleVisual from '../../components/public/RoleVisual'
+import ReportsVisual from '../../components/public/ReportsVisual'
+
 interface FeaturesProps {
   onGetStarted: () => void
   setPage: (p: PublicPage) => void
@@ -107,6 +109,8 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                     <EmployeeVisual />
                   ) : feature.id === 'roles' ? (
                     <RoleVisual />
+                  ) : feature.id === 'reports' ? (
+                    <ReportsVisual />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
