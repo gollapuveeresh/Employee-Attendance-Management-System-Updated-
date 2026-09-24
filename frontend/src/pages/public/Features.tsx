@@ -4,6 +4,7 @@ import LeaveVisual from '../../components/public/LeaveVisual'
 import EmployeeVisual from '../../components/public/EmployeeVisual'
 import RoleVisual from '../../components/public/RoleVisual'
 import ReportsVisual from '../../components/public/ReportsVisual'
+import ResponsiveVisual from '../../components/public/ResponsiveVisual'
 
 interface FeaturesProps {
   onGetStarted: () => void
@@ -111,6 +112,8 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                     <RoleVisual />
                   ) : feature.id === 'reports' ? (
                     <ReportsVisual />
+                  ) : feature.id === 'responsive' ? (
+                    <ResponsiveVisual />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
