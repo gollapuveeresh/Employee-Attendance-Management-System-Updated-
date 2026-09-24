@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import attendanceImage from '../../assets/attendance.jpeg';
 
 export default function AttendanceVisual() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,78 +19,65 @@ export default function AttendanceVisual() {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-full aspect-square md:aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-[#1a1a1a] flex items-center justify-center transition-all duration-700 ease-out group cursor-default bg-[#080808]"
+      className="relative w-full h-full aspect-square md:aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-[#1a1a1a] flex items-center justify-center transition-all duration-700 ease-out group cursor-default bg-[#040404]"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setMousePos({ x: 0, y: 0 })}
     >
        <style dangerouslySetInnerHTML={{ __html: `
+         @keyframes att-camera-breathe {
+           0%, 100% { transform: scale(1.02) translate(0, 0); }
+           50% { transform: scale(1.04) translate(-0.5%, -0.5%); }
+         }
          @keyframes att-gold-path {
-           0% { stroke-dashoffset: 200; }
-           70% { stroke-dashoffset: 0; }
-           100% { stroke-dashoffset: 0; }
+           0%, 20% { stroke-dashoffset: 200; opacity: 1; filter: drop-shadow(0 0 5px #D4AF37); }
+           60% { stroke-dashoffset: 0; opacity: 1; filter: drop-shadow(0 0 10px #D4AF37); }
+           80%, 100% { stroke-dashoffset: 0; opacity: 0; filter: drop-shadow(0 0 5px #D4AF37); }
          }
          @keyframes att-glow-pulse {
-           0%, 65% { opacity: 0; transform: scale(0.8); }
-           70% { opacity: 0.6; transform: scale(1.1); }
-           75%, 100% { opacity: 0; transform: scale(1); }
-         }
-         @keyframes att-floor-pulse {
-           0%, 100% { opacity: 0.2; transform: scale(1); }
-           50% { opacity: 0.6; transform: scale(1.1); }
-         }
-         @keyframes att-sweep-global {
-           0%, 30% { transform: translateX(-150%) skewX(-15deg); }
-           50% { transform: translateX(200%) skewX(-15deg); }
-           100% { transform: translateX(200%) skewX(-15deg); }
+           0%, 55% { opacity: 0; transform: scale(0.8); }
+           60% { opacity: 0.5; transform: scale(1.1); }
+           70%, 100% { opacity: 0; transform: scale(1); }
          }
          @keyframes att-clock-sweep {
            0%, 30% { transform: translateX(-150%) rotate(30deg); opacity: 0; }
-           40% { opacity: 0.3; }
+           40% { opacity: 0.2; }
            50%, 100% { transform: translateX(150%) rotate(30deg); opacity: 0; }
          }
-         @keyframes att-border-orbit {
-           0% { transform: rotate(0deg); }
-           100% { transform: rotate(360deg); }
+         @keyframes att-particle-1 {
+           0%, 100% { transform: translate(0, 0); opacity: 0.1; }
+           50% { transform: translate(15px, -10px); opacity: 0.6; }
+         }
+         @keyframes att-particle-2 {
+           0%, 100% { transform: translate(0, 0); opacity: 0.1; }
+           50% { transform: translate(-10px, -15px); opacity: 0.5; }
          }
        `}} />
 
-       {/* OUTER BORDER ORBIT (Golden light travelling around border) */}
-       <div className="absolute inset-0 z-30 pointer-events-none rounded-[24px] overflow-hidden" style={{ transform: `translate(${mousePos.x / 40}px, ${mousePos.y / 40}px)` }}>
-         <div className="absolute top-1/2 left-1/2 w-[150%] h-[150%] -translate-x-1/2 -translate-y-1/2 animate-[att-border-orbit_10s_linear_infinite]">
-           <div className="w-[50%] h-[3px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent absolute top-0 left-1/4 shadow-[0_0_15px_#D4AF37] opacity-60 group-hover:opacity-100 group-hover:animate-[att-border-orbit_5s_linear_infinite]" />
-         </div>
-         {/* Inner mask to only show light on the exact border */}
-         <div className="absolute inset-[1px] bg-transparent rounded-[23px] shadow-[inset_0_0_20px_rgba(212,175,55,0.1)]" />
-       </div>
-
-       {/* MAIN PHOTOGRAPH LAYER */}
+       {/* 1. MAIN PHOTOGRAPH LAYER (Base) */}
        <div 
-         className="absolute inset-[1px] rounded-[23px] overflow-hidden z-0 transition-transform duration-700 ease-out"
+         className="absolute inset-[1px] rounded-[23px] overflow-hidden z-0 transition-transform duration-700 ease-out animate-[att-camera-breathe_15s_ease-in-out_infinite]"
          style={{ transform: `translate(${mousePos.x / 80}px, ${mousePos.y / 80}px)` }}
        >
+         {/* EXACT imported image */}
          <img 
-           src="/assets/attendance.jpeg" 
-           alt="Attendance Management" 
-           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+           src={attendanceImage} 
+           alt="Employee entering corporate workplace" 
+           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.015]"
+           style={{ objectPosition: 'center center' }}
          />
          
-         {/* Subtle dark gradient overlay - NOT multiply, just normal alpha blending */}
-         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
-         
-         {/* Cinematic Light Sweep across photograph */}
-         <div className="absolute inset-0 pointer-events-none">
-           <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-[#D4AF37]/10 to-transparent animate-[att-sweep-global_8s_ease-in-out_infinite]" />
-         </div>
+         {/* 2. SUBTLE DARK GRADIENT */}
+         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 pointer-events-none" />
        </div>
 
-       {/* FOREGROUND ANIMATIONS */}
+       {/* 3. GOLD ANIMATION & 4. VERIFICATION EFFECTS (Foreground) */}
        <div 
          className="absolute inset-[2px] rounded-[22px] overflow-hidden z-10 pointer-events-none transition-transform duration-700 ease-out"
-         style={{ transform: `translate(${mousePos.x / 25}px, ${mousePos.y / 25}px)` }}
+         style={{ transform: `translate(${mousePos.x / 30}px, ${mousePos.y / 30}px)` }}
        >
          
-         {/* 1. GOLD ENERGY PATH */}
-         <svg className="absolute inset-0 w-full h-full group-hover:brightness-125 transition-all duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
+         {/* GOLD LIGHT PATH (Tracing existing floor line) */}
+         <svg className="absolute inset-0 w-full h-full group-hover:brightness-110 transition-all duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
            <path 
              d="M -10 95 Q 20 90, 35 92 T 60 82 Q 72 75, 85 75" 
              stroke="#D4AF37" 
@@ -99,23 +87,25 @@ export default function AttendanceVisual() {
              strokeDasharray="15 200" 
              strokeDashoffset="200"
              className="animate-[att-gold-path_6s_ease-in-out_infinite]"
-             style={{ filter: 'drop-shadow(0 0 6px #D4AF37)' }}
            />
          </svg>
 
-         {/* CLOCK LIGHT REFLECTION */}
+         {/* CLOCK REFLECTION */}
          <div className="absolute top-[15%] left-[10%] w-[18%] aspect-square rounded-full overflow-hidden">
-           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-[200%] h-full animate-[att-clock-sweep_6s_ease-in-out_infinite]" />
+           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-[200%] h-full animate-[att-clock-sweep_6s_ease-in-out_infinite]" />
          </div>
 
-         {/* FLOOR LIGHT PULSE */}
-         <div className="absolute left-[60%] top-[82%] w-[8%] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 animate-[att-floor-pulse_4s_ease-in-out_infinite] group-hover:border-[#D4AF37]/60" style={{ transform: 'rotateX(60deg)' }} />
-
-         {/* ENTRANCE GLOW */}
+         {/* ENTRANCE VERIFICATION PULSE */}
          <div className="absolute left-[85%] top-[75%] w-[15%] aspect-square -translate-x-1/2 -translate-y-1/2">
-           <div className="w-full h-full rounded-full bg-gradient-to-r from-[#D4AF37]/60 to-transparent blur-[20px] animate-[att-glow-pulse_6s_ease-in-out_infinite]" />
+           <div className="w-full h-full rounded-full bg-gradient-to-r from-[#D4AF37]/50 to-transparent blur-[15px] animate-[att-glow-pulse_6s_ease-in-out_infinite]" />
          </div>
+
+         {/* TINY PARTICLES AROUND PATH */}
+         <div className="absolute left-[35%] top-[85%] w-1 h-1 bg-[#D4AF37] rounded-full shadow-[0_0_4px_#D4AF37] animate-[att-particle-1_4s_ease-in-out_infinite]" />
+         <div className="absolute left-[65%] top-[78%] w-1.5 h-1.5 bg-[#D4AF37] rounded-full shadow-[0_0_6px_#D4AF37] animate-[att-particle-2_5s_ease-in-out_infinite_1s]" />
+         
        </div>
+       
     </div>
   );
 }
