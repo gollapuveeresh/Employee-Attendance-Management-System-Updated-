@@ -170,15 +170,9 @@ export default function Features({ onGetStarted }: FeaturesProps) {
       <section className="py-24 bg-gradient-to-t from-[#0A0A0A] to-[#111111] border-t border-[#1E1E1E] text-center">
         <div className="container mx-auto px-6 max-w-3xl">
           <h2 className="font-heading text-3xl font-bold text-white mb-6">Explore the full potential</h2>
-          <p className="text-gray-400 mb-10 text-lg">
+          <p className="text-gray-400 text-lg">
             Stop juggling multiple tools. Bring your workforce management into a single, unified experience.
           </p>
-          <button
-            onClick={onGetStarted}
-            className="px-10 py-4 rounded-xl bg-[#D4AF37] text-[#0A0A0A] font-bold text-lg transition-all hover:bg-[#E8CB5A] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]"
-          >
-            Log in to Dashboard
-          </button>
         </div>
       </section>
     </div>
