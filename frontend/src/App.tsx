@@ -31,6 +31,10 @@ import Contact from './pages/public/Contact'
 import FAQ from './pages/public/FAQ'
 import ExploreSolutions from './pages/public/ExploreSolutions'
 import SolutionDetail from './pages/public/SolutionDetail'
+import SupportTeam from './pages/public/SupportTeam'
+import PrivacyPolicy from './pages/public/PrivacyPolicy'
+import TermsAndConditions from './pages/public/TermsAndConditions'
+import CookiePolicy from './pages/public/CookiePolicy'
 
 // Feature Pages
 import FeatureAttendance from './pages/public/FeatureAttendance'
@@ -137,7 +141,7 @@ export default function App() {
         setPublicPage(path as PublicPage)
       } else if (path.startsWith('features/')) {
         setPublicPage(path as PublicPage)
-      } else if (['about', 'features', 'solutions', 'contact', 'faq'].includes(path)) {
+      } else if (['about', 'features', 'solutions', 'contact', 'faq', 'support', 'privacy-policy', 'terms-and-conditions', 'cookie-policy'].includes(path)) {
         setPublicPage(path as PublicPage)
       } else {
         setPublicPage('home')
@@ -202,6 +206,10 @@ export default function App() {
         case 'solutions': return <Solutions onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
         case 'contact': return <Contact />
         case 'faq': return <FAQ />
+        case 'support': return <SupportTeam setPage={setPublicPage} />
+        case 'privacy-policy': return <PrivacyPolicy setPage={setPublicPage} />
+        case 'terms-and-conditions': return <TermsAndConditions setPage={setPublicPage} />
+        case 'cookie-policy': return <CookiePolicy setPage={setPublicPage} />
         case 'solutions/explore': return <ExploreSolutions setPage={setPublicPage} />
         default: return <Home onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
       }
