@@ -22,6 +22,7 @@ export default function Home({ onGetStarted, setPage }: HomeProps) {
             muted
             loop
             playsInline
+            preload="auto"
             className="w-full h-auto aspect-video object-cover"
             style={{ maxWidth: 'none' }}
           />
