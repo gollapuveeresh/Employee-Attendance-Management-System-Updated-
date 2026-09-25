@@ -32,6 +32,12 @@ import FAQ from './pages/public/FAQ'
 import ExploreSolutions from './pages/public/ExploreSolutions'
 import SolutionDetail from './pages/public/SolutionDetail'
 
+// Feature Pages
+import FeatureAttendance from './pages/public/FeatureAttendance'
+import FeatureLeave from './pages/public/FeatureLeave'
+import FeatureDirectory from './pages/public/FeatureDirectory'
+import FeatureReporting from './pages/public/FeatureReporting'
+
 export type Screen = 'splash' | 'public' | 'login' | 'forgot' | 'otp' | 'reset' | 'app'
 export type Role = 'employee' | 'hr' | 'admin'
 export type Page =
@@ -129,6 +135,8 @@ export default function App() {
       const path = window.location.pathname.slice(1)
       if (path.startsWith('solutions/explore')) {
         setPublicPage(path as PublicPage)
+      } else if (path.startsWith('features/')) {
+        setPublicPage(path as PublicPage)
       } else if (['about', 'features', 'solutions', 'contact', 'faq'].includes(path)) {
         setPublicPage(path as PublicPage)
       } else {
@@ -187,6 +195,10 @@ export default function App() {
       switch (publicPage) {
         case 'about': return <About onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
         case 'features': return <Features onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
+        case 'features/attendance-tracking': return <FeatureAttendance setPage={setPublicPage} />
+        case 'features/leave-management': return <FeatureLeave setPage={setPublicPage} />
+        case 'features/employee-directory': return <FeatureDirectory setPage={setPublicPage} />
+        case 'features/advanced-reporting': return <FeatureReporting setPage={setPublicPage} />
         case 'solutions': return <Solutions onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
         case 'contact': return <Contact />
         case 'faq': return <FAQ />
