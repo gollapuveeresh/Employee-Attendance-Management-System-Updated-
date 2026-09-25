@@ -29,6 +29,8 @@ import Features from './pages/public/Features'
 import Solutions from './pages/public/Solutions'
 import Contact from './pages/public/Contact'
 import FAQ from './pages/public/FAQ'
+import ExploreSolutions from './pages/public/ExploreSolutions'
+import SolutionDetail from './pages/public/SolutionDetail'
 
 export type Screen = 'splash' | 'public' | 'login' | 'forgot' | 'otp' | 'reset' | 'app'
 export type Role = 'employee' | 'hr' | 'admin'
@@ -110,6 +112,34 @@ export default function App() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Sync state to URL for public pages
+  useEffect(() => {
+    if (screen === 'public') {
+      const path = publicPage === 'home' ? '/' : `/${publicPage}`
+      if (window.location.pathname !== path) {
+        window.history.pushState(null, '', path)
+      }
+    }
+  }, [publicPage, screen])
+
+  // Listen to popstate (browser back/forward)
+  useEffect(() => {
+    const handlePopState = () => {
+      if (screen !== 'public') return
+      const path = window.location.pathname.slice(1)
+      if (path.startsWith('solutions/explore')) {
+        setPublicPage(path as PublicPage)
+      } else if (['about', 'features', 'solutions', 'contact', 'faq'].includes(path)) {
+        setPublicPage(path as PublicPage)
+      } else {
+        setPublicPage('home')
+      }
+    }
+    window.addEventListener('popstate', handlePopState)
+    handlePopState() // sync on mount
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [screen])
+
   const handleLogin = async (email: string, password: string): Promise<string | null> => {
     try {
       const res = await authApi.login(email, password)
@@ -151,12 +181,16 @@ export default function App() {
   
   if (screen === 'public') {
     const renderPublicPage = () => {
+      if (publicPage.startsWith('solutions/explore/')) {
+        return <SolutionDetail id={publicPage.replace('solutions/explore/', '')} setPage={setPublicPage} />
+      }
       switch (publicPage) {
-        case 'about': return <About />
-        case 'features': return <Features />
-        case 'solutions': return <Solutions />
+        case 'about': return <About onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
+        case 'features': return <Features onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
+        case 'solutions': return <Solutions onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
         case 'contact': return <Contact />
         case 'faq': return <FAQ />
+        case 'solutions/explore': return <ExploreSolutions setPage={setPublicPage} />
         default: return <Home onGetStarted={() => setScreen('login')} setPage={setPublicPage} />
       }
     }
