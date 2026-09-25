@@ -71,7 +71,7 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
 
           {/* Navigation */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <h4 className="text-[#D4AF37] font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => { setPage('home'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
@@ -102,7 +102,7 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
 
           {/* Product */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Product Features</h4>
+            <h4 className="text-[#D4AF37] font-semibold mb-4">Product Features</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => { setPage('features/attendance-tracking'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
@@ -133,7 +133,7 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
 
           {/* Support */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Support</h4>
+            <h4 className="text-[#D4AF37] font-semibold mb-4">Support</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => { setPage('support'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
@@ -158,7 +158,7 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
 
           {/* Legal */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Legal</h4>
+            <h4 className="text-[#D4AF37] font-semibold mb-4">Legal</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => { setPage('privacy-policy'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
