@@ -1,4 +1,5 @@
 import { PublicPage } from '../../components/public/Navbar'
+import videoAsset from '../../assets/video.mp4'
 
 interface HomeProps {
   onGetStarted: () => void
@@ -9,10 +10,23 @@ export default function Home({ onGetStarted, setPage }: HomeProps) {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+      <section className="relative pt-[90px] pb-20 lg:pb-32 overflow-hidden">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
         
+        {/* Full-width Video Visual */}
+        <div className="w-full relative z-10 mb-16 lg:mb-24">
+          <video
+            src={videoAsset}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto aspect-video object-cover"
+            style={{ maxWidth: 'none' }}
+          />
+        </div>
+
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight animate-fade-up">
@@ -35,62 +49,6 @@ export default function Home({ onGetStarted, setPage }: HomeProps) {
                 Explore Features
               </button>
             </div>
-          </div>
-        </div>
-
-        {/* Dashboard Preview (Abstracted) */}
-        <div className="mt-20 container mx-auto px-6 max-w-5xl animate-fade-up delay-300">
-          <div className="relative rounded-2xl border border-[#2A2A2A] bg-[#111111] shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden group">
-             {/* Glow Effect */}
-             <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-             
-             {/* Header Mock */}
-             <div className="h-12 border-b border-[#2A2A2A] bg-[#0D0D0D] flex items-center px-4 gap-2">
-               <div className="w-3 h-3 rounded-full bg-[#ef4444]/20 border border-[#ef4444]/50" />
-               <div className="w-3 h-3 rounded-full bg-[#facc15]/20 border border-[#facc15]/50" />
-               <div className="w-3 h-3 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/50" />
-             </div>
-             
-             {/* Body Mock */}
-             <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="col-span-2 space-y-6">
-                  {/* Stats Row */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-24 rounded-xl bg-[#171717] border border-[#1E1E1E] p-4 flex flex-col justify-between">
-                         <div className="w-8 h-8 rounded-lg bg-[#2A2A2A] animate-pulse" />
-                         <div className="w-16 h-4 rounded bg-[#333333] animate-pulse" />
-                      </div>
-                    ))}
-                  </div>
-                  {/* Chart Area */}
-                  <div className="h-64 rounded-xl bg-[#171717] border border-[#1E1E1E] p-4">
-                    <div className="w-32 h-4 rounded bg-[#2A2A2A] mb-6 animate-pulse" />
-                    <div className="flex items-end gap-2 h-44 mt-4">
-                      {[40, 70, 45, 90, 65, 85, 50].map((h, i) => (
-                        <div key={i} className="flex-1 rounded-t-md bg-[#D4AF37]/20 border-t border-[#D4AF37]/50" style={{ height: `${h}%` }} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-6">
-                  {/* Activity Feed */}
-                  <div className="h-full rounded-xl bg-[#171717] border border-[#1E1E1E] p-4">
-                    <div className="w-24 h-4 rounded bg-[#2A2A2A] mb-6 animate-pulse" />
-                    <div className="space-y-4">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="flex items-center gap-3">
-                           <div className="w-10 h-10 rounded-full bg-[#2A2A2A] animate-pulse shrink-0" />
-                           <div className="flex-1 space-y-2">
-                             <div className="w-full h-3 rounded bg-[#333333] animate-pulse" />
-                             <div className="w-2/3 h-3 rounded bg-[#222222] animate-pulse" />
-                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-             </div>
           </div>
         </div>
       </section>
