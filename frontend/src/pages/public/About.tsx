@@ -192,7 +192,7 @@ export default function About({ onGetStarted, setPage }: AboutProps) {
             "At VPD Technologies, we believe technology is most valuable when it makes work simpler, decisions clearer and organizations more efficient."
           </p>
           <button
-            onClick={() => setPage('solutions')}
+            onClick={() => setPage('solutions/explore')}
             className="px-8 py-4 rounded-xl bg-transparent border-2 border-[#D4AF37] text-[#D4AF37] font-bold text-lg transition-all hover:bg-[#D4AF37] hover:text-[#0A0A0A] inline-flex items-center gap-3 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_25px_rgba(212,175,55,0.3)] animate-fade-up delay-200"
           >
             Explore Our Solutions
