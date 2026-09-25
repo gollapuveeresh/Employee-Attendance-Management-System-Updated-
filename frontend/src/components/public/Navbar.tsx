@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export type PublicPage = 'home' | 'about' | 'features' | 'solutions' | 'contact' | 'faq' | 'solutions/explore' | `solutions/explore/${string}`
+export type PublicPage = 'home' | 'about' | 'features' | 'solutions' | 'contact' | 'faq' | 'solutions/explore' | `solutions/explore/${string}` | 'features/attendance-tracking' | 'features/leave-management' | 'features/employee-directory' | 'features/advanced-reporting'
 
 interface NavbarProps {
   page: PublicPage
