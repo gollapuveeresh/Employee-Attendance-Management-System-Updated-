@@ -4,9 +4,9 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
   return (
     <footer className="bg-[#0A0A0A] border-t border-[#2A2A2A] pt-16 pb-8">
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
           {/* Brand Col */}
-          <div className="md:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-1">
             <div 
               className="flex items-center gap-3 mb-4 cursor-pointer group transition-all duration-300"
               onClick={() => { setPage('home'); window.scrollTo(0,0) }}
@@ -136,6 +136,12 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
             <h4 className="text-white font-semibold mb-4">Support</h4>
             <ul className="space-y-2">
               <li>
+                <button onClick={() => { setPage('support'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
+                  Support Team
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full motion-reduce:transition-none"></span>
+                </button>
+              </li>
+              <li>
                 <button onClick={() => { setPage('contact'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
                   Contact Us
                   <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full motion-reduce:transition-none"></span>
@@ -144,6 +150,31 @@ export default function Footer({ setPage }: { setPage: (p: PublicPage) => void }
               <li>
                 <button onClick={() => { setPage('faq'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
                   FAQ
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full motion-reduce:transition-none"></span>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2">
+              <li>
+                <button onClick={() => { setPage('privacy-policy'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
+                  Privacy Policy
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full motion-reduce:transition-none"></span>
+                </button>
+              </li>
+              <li>
+                <button onClick={() => { setPage('terms-and-conditions'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
+                  Terms & Conditions
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full motion-reduce:transition-none"></span>
+                </button>
+              </li>
+              <li>
+                <button onClick={() => { setPage('cookie-policy'); window.scrollTo(0,0) }} className="group relative inline-block text-gray-400 hover:text-[#D4AF37] text-sm transition-all duration-300 hover:translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none text-left">
+                  Cookie Policy
                   <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full motion-reduce:transition-none"></span>
                 </button>
               </li>
