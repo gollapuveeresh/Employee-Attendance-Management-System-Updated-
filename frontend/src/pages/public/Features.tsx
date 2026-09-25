@@ -6,6 +6,7 @@ import RoleVisual from '../../components/public/RoleVisual'
 import ReportsVisual from '../../components/public/ReportsVisual'
 import ResponsiveVisual from '../../components/public/ResponsiveVisual'
 import AdminControlsVisual from '../../components/public/AdminControlsVisual'
+import NotificationsVisual from '../../components/public/NotificationsVisual'
 
 interface FeaturesProps {
   onGetStarted: () => void
@@ -118,6 +119,8 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                     <ResponsiveVisual />
                   ) : feature.id === 'admin' ? (
                     <AdminControlsVisual />
+                  ) : feature.id === 'notifications' ? (
+                    <NotificationsVisual />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
