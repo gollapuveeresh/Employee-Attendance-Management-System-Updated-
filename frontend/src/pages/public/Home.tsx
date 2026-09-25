@@ -196,22 +196,83 @@ export default function Home({ onGetStarted, setPage }: HomeProps) {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24 bg-gradient-to-b from-[#0A0A0A] to-[#111111] border-t border-[#1E1E1E]">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold text-white mb-6">
-            Ready to modernize workforce management?
-          </h2>
-          <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
-            Bring attendance, employee data, and leave management into one centralized, secure platform.
-          </p>
-          <button
-            onClick={onGetStarted}
-            className="px-10 py-4 rounded-xl bg-white text-[#0A0A0A] font-bold text-lg transition-all hover:bg-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:-translate-y-1"
-          >
-            Get Started
-          </button>
+      {/* Closing Section */}
+      <section className="py-24 bg-gradient-to-b from-[#0D0D0D] to-[#111111] border-t border-[#1E1E1E] overflow-hidden">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-20 animate-fade-up">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-white mb-6">
+              Built for the Way Your Team Works
+            </h2>
+            <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              From everyday workforce operations to organizational insights, VPD Technologies brings the essential tools together in one connected digital experience.
+            </p>
+          </div>
+
+          <div className="relative mb-20">
+            {/* Thin gold connecting line animating left to right */}
+            <div className="absolute top-1/2 left-0 w-full h-[1px] overflow-hidden -translate-y-1/2 hidden md:block">
+              <div className="absolute top-0 left-0 w-full h-full bg-[#2A2A2A]" />
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" style={{ animation: 'shimmerLine 3s infinite linear' }} />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+              {[
+                { 
+                  id: '01', 
+                  title: 'WORKFORCE', 
+                  desc: 'Manage attendance, leave, employee records, and everyday workforce operations from one connected platform.' 
+                },
+                { 
+                  id: '02', 
+                  title: 'VISIBILITY', 
+                  desc: 'Bring operational information together so teams can understand what is happening across their organization.' 
+                },
+                { 
+                  id: '03', 
+                  title: 'CONTROL', 
+                  desc: 'Give the right people the right access while keeping organizational workflows structured and secure.' 
+                }
+              ].map((block, i) => (
+                <div 
+                  key={i} 
+                  className="bg-[#111111] border border-[#2A2A2A] p-8 rounded-2xl hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)] transition-all duration-500 relative group animate-fade-up"
+                  style={{ animationDelay: `${i * 150}ms` }}
+                >
+                  <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* Small gold accent */}
+                  <div className="w-8 h-1 bg-[#D4AF37]/30 rounded-full mb-6 group-hover:bg-[#D4AF37] transition-colors duration-500" />
+                  
+                  <div className="text-[#D4AF37] font-bold text-sm tracking-wider mb-4">
+                    {block.id} &mdash; {block.title}
+                  </div>
+                  <p className="text-gray-400 leading-relaxed text-sm">
+                    {block.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center animate-fade-up delay-300">
+            <button
+              onClick={() => setPage('solutions/explore')}
+              className="group inline-flex items-center text-[#D4AF37] font-semibold text-lg hover:text-white transition-colors"
+            >
+              Explore VPD Technologies
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-2 transform group-hover:translate-x-2 transition-transform duration-300">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
         </div>
+
+        <style>{`
+          @keyframes shimmerLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        `}</style>
       </section>
     </div>
   )
