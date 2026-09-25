@@ -5,6 +5,7 @@ import EmployeeVisual from '../../components/public/EmployeeVisual'
 import RoleVisual from '../../components/public/RoleVisual'
 import ReportsVisual from '../../components/public/ReportsVisual'
 import ResponsiveVisual from '../../components/public/ResponsiveVisual'
+import AdminControlsVisual from '../../components/public/AdminControlsVisual'
 
 interface FeaturesProps {
   onGetStarted: () => void
@@ -88,8 +89,9 @@ export default function Features({ onGetStarted }: FeaturesProps) {
         <div className="container mx-auto px-6 max-w-6xl space-y-32">
           {featureList.map((feature, idx) => {
             const isEven = idx % 2 === 0
+            const flexDir = feature.id === 'admin' ? 'md:flex-row' : isEven ? 'md:flex-row' : 'md:flex-row-reverse'
             return (
-              <div key={feature.id} className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 lg:gap-20 group`}>
+              <div key={feature.id} className={`flex flex-col ${flexDir} items-center gap-12 lg:gap-20 group`}>
                 
                 {/* Text Content */}
                 <div className="flex-1 space-y-6">
@@ -114,6 +116,8 @@ export default function Features({ onGetStarted }: FeaturesProps) {
                     <ReportsVisual />
                   ) : feature.id === 'responsive' ? (
                     <ResponsiveVisual />
+                  ) : feature.id === 'admin' ? (
+                    <AdminControlsVisual />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
