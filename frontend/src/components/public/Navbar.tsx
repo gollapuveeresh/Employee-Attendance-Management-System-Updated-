@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-
+import vpdLogo from '../../assets/vpd-technologies-logo.png'
 export type PublicPage = 'home' | 'about' | 'features' | 'solutions' | 'contact' | 'faq' | 'support' | 'privacy-policy' | 'terms-and-conditions' | 'cookie-policy' | 'solutions/explore' | `solutions/explore/${string}` | 'features/attendance-tracking' | 'features/leave-management' | 'features/employee-directory' | 'features/advanced-reporting'
 
 interface NavbarProps {
@@ -43,16 +43,12 @@ export default function Navbar({ page, setPage, onLoginClick }: NavbarProps) {
     >
       <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-3 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-lg" onClick={() => handleNavClick('home')} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && handleNavClick('home')}>
-          <div className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-[#D4AF37] to-[#A08820] shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] motion-reduce:transition-none motion-reduce:group-hover:transform-none">
-            <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
-              <path d="M8 8h10v10H8zM22 8h10v10H22zM8 22h10v10H8zM22 22h6v6H22z" fill="white" fillOpacity="0.9" />
-              <circle cx="31" cy="31" r="3" fill="white" fillOpacity="0.6" />
-            </svg>
-          </div>
-          <div className="font-heading font-bold text-lg text-white leading-tight transition-colors duration-300">
-            VPD <span className="text-[#D4AF37]">Technologies</span>
-          </div>
+        <div className="flex items-center cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-lg" onClick={() => handleNavClick('home')} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && handleNavClick('home')}>
+          <img 
+            src={vpdLogo} 
+            alt="VPD Technologies Logo" 
+            className="w-auto h-auto max-h-[28px] md:max-h-[36px] object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:transform-none"
+          />
         </div>
 
         {/* Desktop Nav */}
