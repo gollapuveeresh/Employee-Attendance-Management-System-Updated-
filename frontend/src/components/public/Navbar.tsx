@@ -43,12 +43,20 @@ export default function Navbar({ page, setPage, onLoginClick }: NavbarProps) {
     >
       <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-lg" onClick={() => handleNavClick('home')} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && handleNavClick('home')}>
+        <div 
+          className="flex items-center gap-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:active:transform-none" 
+          onClick={() => handleNavClick('home')} 
+          tabIndex={0} 
+          onKeyDown={(e) => e.key === 'Enter' && handleNavClick('home')}
+        >
           <img 
             src={vpdLogo} 
-            alt="VPD Technologies Logo" 
-            className="w-auto h-auto max-h-[28px] md:max-h-[36px] object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:transform-none"
+            alt="VPD Technologies logo" 
+            className="w-auto h-auto max-h-[28px] md:max-h-[36px] object-contain"
           />
+          <div className="font-heading font-bold text-lg whitespace-nowrap leading-tight">
+            <span className="text-white">VPD</span> <span className="text-[#D4AF37]">Technologies</span>
+          </div>
         </div>
 
         {/* Desktop Nav */}
