@@ -67,11 +67,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+import dj_database_url
+
 # Database configuration: Production PostgreSQL with SQLite option
 DB_ENGINE = os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3')
 DB_NAME = os.environ.get('DB_NAME', 'vpd_attendance_db')
 
-if 'postgresql' in DB_ENGINE:
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600
+        )
+    }
+elif 'postgresql' in DB_ENGINE:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',

@@ -29,13 +29,14 @@ def custom_exception_handler(exc, context):
         response.data = custom_data
     else:
         logger.error(f'Unhandled Exception: {exc}', exc_info=True)
+        from django.conf import settings
         response = Response(
             {
                 'success': False,
                 'status_code': status.HTTP_500_INTERNAL_SERVER_ERROR,
                 'error': {
                     'message': 'An unexpected server error occurred.',
-                    'details': str(exc)
+                    'details': str(exc) if settings.DEBUG else 'Contact the administrator if the issue persists.'
                 }
             },
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
