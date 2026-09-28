@@ -160,14 +160,17 @@ export default function App() {
       setScreen('app')
       return null
     } catch (err: any) {
-      // Fallback for offline demo accounts
-      const found = DEMO_USERS[email.toLowerCase()]
-      if (found && found.password === password) {
-        const { password: _, ...u } = found
-        setUser(u)
-        setPage('dashboard')
-        setScreen('app')
-        return null
+      // In production, always show the real authentication error.
+      // DEMO_USERS fallback is only available in local development.
+      if (import.meta.env.DEV) {
+        const found = DEMO_USERS[email.toLowerCase()]
+        if (found && found.password === password) {
+          const { password: _, ...u } = found
+          setUser(u)
+          setPage('dashboard')
+          setScreen('app')
+          return null
+        }
       }
       return err.message || 'Incorrect credentials or user not found.'
     }
