@@ -43,7 +43,14 @@ function LiveTimer({ seconds }: { seconds: number }) {
   )
 }
 
-import { attendanceApi } from '../../api/attendance'
+import { attendanceApi, AttendanceRecordData, BranchLocationInfo } from '../../api/attendance'
+import {
+  Coordinates,
+  getCurrentCoordinates,
+  calculateDistanceMeters,
+  formatDistance,
+} from '../../utils/geolocation'
+import { apiRequest } from '../../api/client'
 
 const statusColors: Record<string, string> = {
   Present: '#22C55E',
@@ -54,6 +61,10 @@ const statusColors: Record<string, string> = {
   'Half Day': '#F97316',
 }
 
+interface Props {
+  user: AppUser
+}
+
 export default function EmployeeDashboard({ user }: Props) {
   const [attendanceStatus, setAttendanceStatus] = useState<AttendanceStatus>('not-checked-in')
   const [elapsed, setElapsed] = useState(0)
@@ -62,8 +73,40 @@ export default function EmployeeDashboard({ user }: Props) {
   const [loading, setLoading] = useState(false)
   const [recentAttendance, setRecentAttendance] = useState<any[]>([])
 
+  // Geolocation & Geofence states
+  const [branchInfo, setBranchInfo] = useState<BranchLocationInfo | null>(null)
+  const [todayRecord, setTodayRecord] = useState<AttendanceRecordData | null>(null)
+  const [coords, setCoords] = useState<Coordinates | null>(null)
+  const [distanceToOffice, setDistanceToOffice] = useState<number | null>(null)
+  const [gpsState, setGpsState] = useState<'idle' | 'detecting' | 'ready' | 'error'>('idle')
+  const [gpsError, setGpsError] = useState<string | null>(null)
+  const [rejectionAlert, setRejectionAlert] = useState<string | null>(null)
+  const [syncingOffice, setSyncingOffice] = useState(false)
+
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
+
+  const detectLocation = async (targetBranch?: BranchLocationInfo | null): Promise<Coordinates | null> => {
+    setGpsState('detecting')
+    setGpsError(null)
+    try {
+      const pos = await getCurrentCoordinates()
+      setCoords(pos)
+      const activeBranch = targetBranch !== undefined ? targetBranch : branchInfo
+      if (activeBranch && activeBranch.latitude != null && activeBranch.longitude != null) {
+        const d = calculateDistanceMeters(pos.latitude, pos.longitude, activeBranch.latitude, activeBranch.longitude)
+        setDistanceToOffice(d)
+      } else {
+        setDistanceToOffice(null)
+      }
+      setGpsState('ready')
+      return pos
+    } catch (err: any) {
+      setGpsState('error')
+      setGpsError(err.message || 'GPS location could not be determined.')
+      return null
+    }
+  }
 
   useEffect(() => {
     attendanceApi.getHistory().then(records => {
@@ -74,24 +117,37 @@ export default function EmployeeDashboard({ user }: Props) {
           checkOut: r.check_out ? r.check_out.slice(0, 5) : '--',
           hours: r.working_hours > 0 ? `${r.working_hours}h` : (r.check_in && !r.check_out ? 'Live' : '--'),
           status: r.status,
+          distance: r.distance_from_branch_meters,
+          verified: r.is_location_verified,
         })))
       }
     }).catch(() => {})
   }, [])
 
   useEffect(() => {
-    // Fetch today's actual attendance from backend
+    // Fetch today's actual attendance and assigned branch coordinates from backend
     attendanceApi.getToday().then(res => {
-      if (res && res.status) {
-        setAttendanceStatus(res.status)
-        setElapsed(res.elapsed_seconds || 0)
-        setBreakElapsed(res.break_duration_seconds || 0)
-        if (res.record && res.record.check_in) {
-          setCheckInTime(res.record.check_in.slice(0, 5))
+      if (res) {
+        if (res.branch) {
+          setBranchInfo(res.branch)
+          detectLocation(res.branch)
+        } else {
+          detectLocation(null)
+        }
+        if (res.status) {
+          setAttendanceStatus(res.status)
+          setElapsed(res.elapsed_seconds || 0)
+          setBreakElapsed(res.break_duration_seconds || 0)
+        }
+        if (res.record) {
+          setTodayRecord(res.record)
+          if (res.record.check_in) {
+            setCheckInTime(res.record.check_in.slice(0, 5))
+          }
         }
       }
     }).catch(() => {
-      // Offline fallback
+      detectLocation(null)
     })
   }, [])
 
@@ -109,15 +165,44 @@ export default function EmployeeDashboard({ user }: Props) {
 
   const handleCheckIn = async () => {
     setLoading(true)
+    setRejectionAlert(null)
     try {
-      const res = await attendanceApi.checkIn()
+      // Refresh GPS coordinates
+      let pos = coords
+      if (!pos || gpsState !== 'ready') {
+        pos = await detectLocation(branchInfo)
+      }
+
+      if (!pos) {
+        setRejectionAlert('Location access is required for attendance clock-in. Please enable GPS permissions in your browser.')
+        setLoading(false)
+        return
+      }
+
+      // Client-side strict geofence validation for instant feedback
+      if (branchInfo && branchInfo.latitude != null && branchInfo.longitude != null) {
+        const d = calculateDistanceMeters(pos.latitude, pos.longitude, branchInfo.latitude, branchInfo.longitude)
+        setDistanceToOffice(d)
+        if (d > branchInfo.radius_meters) {
+          setRejectionAlert('You are not at office location')
+          setLoading(false)
+          return
+        }
+      }
+
+      // Backend submission with coordinates
+      const res = await attendanceApi.checkIn({
+        latitude: pos.latitude,
+        longitude: pos.longitude,
+      })
+      setTodayRecord(res)
       setCheckInTime(res.check_in ? res.check_in.slice(0, 5) : new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }))
       setAttendanceStatus('checked-in')
       setElapsed(0)
-    } catch {
-      setCheckInTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }))
-      setAttendanceStatus('checked-in')
-      setElapsed(0)
+      setRejectionAlert(null)
+    } catch (err: any) {
+      const errMsg = err.message || (typeof err === 'string' ? err : 'Check-in failed')
+      setRejectionAlert(errMsg)
     } finally {
       setLoading(false)
     }
@@ -135,7 +220,10 @@ export default function EmployeeDashboard({ user }: Props) {
   const handleCheckOut = async () => {
     setLoading(true)
     try {
-      await attendanceApi.checkOut()
+      const pos = coords || (await getCurrentCoordinates().catch(() => null))
+      const payload = pos ? { latitude: pos.latitude, longitude: pos.longitude } : undefined
+      const res = await attendanceApi.checkOut(payload)
+      setTodayRecord(res)
       setAttendanceStatus('checked-out')
     } catch {
       setAttendanceStatus('checked-out')
@@ -144,7 +232,41 @@ export default function EmployeeDashboard({ user }: Props) {
     }
   }
 
+  // Developer / Demo convenience: Set branch office coordinates to current position
+  const handleSyncOfficeLocation = async () => {
+    if (!branchInfo || !coords) return
+    setSyncingOffice(true)
+    try {
+      await apiRequest(`/organization/branches/${branchInfo.id}/`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          radius_meters: Math.max(branchInfo.radius_meters || 200, 200),
+          geofence_enabled: true
+        })
+      })
+      const updated = {
+        ...branchInfo,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        radius_meters: Math.max(branchInfo.radius_meters || 200, 200),
+        geofence_enabled: true
+      }
+      setBranchInfo(updated)
+      setDistanceToOffice(0)
+      setRejectionAlert(null)
+    } catch (err: any) {
+      alert(err.message || 'Failed to update branch location')
+    } finally {
+      setSyncingOffice(false)
+    }
+  }
+
   const progressPct = Math.min((elapsed / (8 * 3600)) * 100, 100)
+  const isInsideRadius = branchInfo && distanceToOffice != null
+    ? distanceToOffice <= branchInfo.radius_meters
+    : true
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -204,6 +326,141 @@ export default function EmployeeDashboard({ user }: Props) {
             </div>
           )}
 
+          {/* Location Verification & Geofence Radar Card */}
+          <div
+            className="rounded-xl p-4 mb-6"
+            style={{
+              background: '#161616',
+              border: isInsideRadius ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(239,68,68,0.3)',
+            }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-sm"
+                  style={{
+                    background: isInsideRadius ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)',
+                    color: isInsideRadius ? '#22C55E' : '#EF4444',
+                  }}
+                >
+                  📍
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-white flex items-center gap-2">
+                    {branchInfo?.name || user.branch || 'Assigned Office'}
+                    <span
+                      className="px-2 py-0.5 rounded-full text-[10px] font-medium"
+                      style={{
+                        background: 'rgba(212,175,55,0.15)',
+                        color: '#D4AF37',
+                        border: '1px solid rgba(212,175,55,0.25)',
+                      }}
+                    >
+                      Strict Geofence: {branchInfo?.radius_meters || 200}m
+                    </span>
+                  </div>
+                  <div className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+                    {branchInfo?.city || 'On-site'} · Geofence enforcement active
+                  </div>
+                </div>
+              </div>
+
+              {/* Status pill */}
+              <div className="flex items-center gap-2">
+                {gpsState === 'detecting' && (
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs" style={{ background: '#222', color: '#FACC15' }}>
+                    <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
+                    Acquiring GPS...
+                  </span>
+                )}
+                {gpsState === 'ready' && (
+                  <span
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
+                    style={{
+                      background: isInsideRadius ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
+                      color: isInsideRadius ? '#22C55E' : '#EF4444',
+                      border: `1px solid ${isInsideRadius ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                    }}
+                  >
+                    <span className={`w-2 h-2 rounded-full ${isInsideRadius ? 'bg-green-500' : 'bg-red-500'}`} />
+                    {distanceToOffice != null
+                      ? isInsideRadius
+                        ? `Inside Geofence (${formatDistance(distanceToOffice)} away)`
+                        : `Outside Geofence (${formatDistance(distanceToOffice)} away)`
+                      : 'GPS Ready'}
+                  </span>
+                )}
+                {gpsState === 'error' && (
+                  <button
+                    onClick={() => detectLocation(branchInfo)}
+                    className="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors"
+                    style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)' }}
+                  >
+                    Retry GPS
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* GPS coordinates & accuracy details */}
+            <div className="flex flex-wrap items-center justify-between text-[11px] pt-2 border-t border-[#222] text-[#888]">
+              <div>
+                {coords ? (
+                  <span>
+                    Current Location: <span className="text-[#CCC]">{coords.latitude.toFixed(5)}, {coords.longitude.toFixed(5)}</span>
+                    {coords.accuracy && <span> (±{Math.round(coords.accuracy)}m)</span>}
+                  </span>
+                ) : (
+                  <span>{gpsError || 'Waiting for browser GPS coordinates...'}</span>
+                )}
+              </div>
+
+              {/* Dev test convenience button */}
+              {coords && branchInfo && (
+                <button
+                  onClick={handleSyncOfficeLocation}
+                  disabled={syncingOffice}
+                  title="Sets the office branch latitude & longitude to your current position for easy testing"
+                  className="hover:underline text-[11px] text-[#D4AF37] transition-all"
+                >
+                  {syncingOffice ? 'Syncing...' : '⚡ Test Mode: Set Office to Here'}
+                </button>
+              )}
+            </div>
+
+            {/* Clock-in Location Log if already recorded today */}
+            {todayRecord && todayRecord.check_in && (
+              <div className="mt-2.5 pt-2 border-t border-[#222] flex items-center justify-between text-xs">
+                <span className="text-[#888]">Clock-in Verification:</span>
+                <span className="flex items-center gap-1 text-green-400 font-medium">
+                  ✓ Verified On-Site {todayRecord.distance_from_branch_meters != null && `(${formatDistance(todayRecord.distance_from_branch_meters)} from branch)`}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Rejection / Validation Warning Alert */}
+          {rejectionAlert && (
+            <div
+              className="flex items-start gap-3 p-4 rounded-xl mb-6 text-sm animate-shake"
+              style={{
+                background: 'rgba(239,68,68,0.12)',
+                border: '1px solid rgba(239,68,68,0.35)',
+                color: '#F87171',
+              }}
+            >
+              <svg className="w-5 h-5 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <div>
+                <div className="font-semibold text-white">Clock-in Blocked (Strict Mode)</div>
+                <div className="text-xs mt-0.5 leading-relaxed">{rejectionAlert}</div>
+              </div>
+            </div>
+          )}
+
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3">
             {attendanceStatus === 'not-checked-in' && (
@@ -211,10 +468,16 @@ export default function EmployeeDashboard({ user }: Props) {
                 onClick={handleCheckIn}
                 disabled={loading}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl font-heading font-semibold text-sm transition-all"
-                style={{ background: 'linear-gradient(135deg, #22C55E, #16A34A)', color: 'white', boxShadow: '0 4px 16px rgba(34,197,94,0.25)' }}
+                style={{
+                  background: isInsideRadius
+                    ? 'linear-gradient(135deg, #22C55E, #16A34A)'
+                    : 'linear-gradient(135deg, #DC2626, #991B1B)',
+                  color: 'white',
+                  boxShadow: isInsideRadius ? '0 4px 16px rgba(34,197,94,0.25)' : '0 4px 16px rgba(220,38,38,0.25)',
+                }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {loading ? 'Checking in...' : 'Check In'}
+                {loading ? 'Verifying location...' : (isInsideRadius ? 'Check In (Verified Location)' : 'Check In (Strict Check)')}
               </button>
             )}
             {attendanceStatus === 'checked-in' && (

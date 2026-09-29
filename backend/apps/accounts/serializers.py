@@ -31,12 +31,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'designation': self.user.designation or 'Team Member',
             'department': self.user.department.name if self.user.department else 'General',
             'branch': self.user.branch.name if self.user.branch else 'HQ',
+            'branch_latitude': float(self.user.branch.latitude) if self.user.branch and self.user.branch.latitude is not None else None,
+            'branch_longitude': float(self.user.branch.longitude) if self.user.branch and self.user.branch.longitude is not None else None,
+            'branch_radius_meters': self.user.branch.radius_meters if self.user.branch else 200,
+            'branch_geofence_enabled': self.user.branch.geofence_enabled if self.user.branch else False,
         }
         return data
 
 class UserSerializer(serializers.ModelSerializer):
     department_name = serializers.CharField(source='department.name', read_only=True)
     branch_name = serializers.CharField(source='branch.name', read_only=True)
+    branch_latitude = serializers.FloatField(source='branch.latitude', read_only=True)
+    branch_longitude = serializers.FloatField(source='branch.longitude', read_only=True)
+    branch_radius_meters = serializers.IntegerField(source='branch.radius_meters', read_only=True)
+    branch_geofence_enabled = serializers.BooleanField(source='branch.geofence_enabled', read_only=True)
     name = serializers.SerializerMethodField()
 
     class Meta:
@@ -44,7 +52,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'username', 'name', 'first_name', 'last_name', 'email',
             'role', 'employee_id', 'designation', 'department', 'department_name',
-            'branch', 'branch_name', 'phone_number', 'date_of_joining', 'is_active'
+            'branch', 'branch_name', 'branch_latitude', 'branch_longitude',
+            'branch_radius_meters', 'branch_geofence_enabled',
+            'phone_number', 'date_of_joining', 'is_active'
         ]
         read_only_fields = ['id']
 

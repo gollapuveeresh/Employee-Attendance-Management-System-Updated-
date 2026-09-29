@@ -18,7 +18,11 @@ class BranchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Branch
-        fields = ['id', 'name', 'city', 'address', 'is_headquarters', 'employee_count', 'created_at']
+        fields = [
+            'id', 'name', 'city', 'address', 'is_headquarters',
+            'latitude', 'longitude', 'radius_meters', 'geofence_enabled',
+            'employee_count', 'created_at'
+        ]
 
     @extend_schema_field(serializers.IntegerField())
     def get_employee_count(self, obj):

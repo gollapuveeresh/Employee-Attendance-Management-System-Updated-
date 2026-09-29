@@ -16,6 +16,10 @@ class Branch(models.Model):
     city = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)
     is_headquarters = models.BooleanField(default=False)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text='Branch Latitude')
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text='Branch Longitude')
+    radius_meters = models.PositiveIntegerField(default=200, help_text='Allowed geofence radius in meters')
+    geofence_enabled = models.BooleanField(default=True, help_text='Enforce strict location verification')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

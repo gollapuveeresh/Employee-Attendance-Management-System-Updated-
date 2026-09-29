@@ -184,7 +184,7 @@ export default function HRDashboard({ user }: Props) {
               <div key={i} className="flex items-start justify-between gap-3 p-3 rounded-xl" style={{ background: '#171717' }}>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-heading font-bold text-xs" style={{ background: 'linear-gradient(135deg, #D4AF37, #A08820)', color: '#0A0A0A' }}>
-                    {l.name.split(' ').map(n => n[0]).join('')}
+                    {l.name.split(' ').map((n: string) => n[0]).join('')}
                   </div>
                   <div>
                     <div className="text-sm font-medium text-white">{l.name}</div>

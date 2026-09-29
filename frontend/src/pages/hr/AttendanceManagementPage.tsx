@@ -27,7 +27,11 @@ export default function AttendanceManagementPage() {
           checkIn: r.check_in ? r.check_in.slice(0, 5) : '--',
           checkOut: r.check_out ? r.check_out.slice(0, 5) : '--',
           hours: r.working_hours > 0 ? `${r.working_hours}h` : (r.check_in && !r.check_out ? 'Live' : '--'),
-          status: r.status || 'Present'
+          status: r.status || 'Present',
+          verified: r.is_location_verified,
+          distance: r.distance_from_branch_meters,
+          checkInLat: r.check_in_lat,
+          checkInLng: r.check_in_lng,
         })))
       }
     }).catch(() => {})
@@ -86,7 +90,7 @@ export default function AttendanceManagementPage() {
           <table className="w-full">
             <thead>
               <tr style={{ borderBottom: '1px solid #1E1E1E' }}>
-                {['Employee', 'Department', 'Branch', 'Check-in', 'Check-out', 'Hours', 'Status', 'Actions'].map(h => (
+                {['Employee', 'Department', 'Branch', 'Check-in', 'Check-out', 'Hours', 'Status', 'Location', 'Actions'].map(h => (
                   <th key={h} className="px-5 py-3.5 text-left text-xs font-medium" style={{ color: '#6B6B6B' }}>{h}</th>
                 ))}
               </tr>
@@ -97,7 +101,7 @@ export default function AttendanceManagementPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center font-heading font-bold text-xs" style={{ background: 'linear-gradient(135deg, #D4AF37, #A08820)', color: '#0A0A0A' }}>
-                        {r.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        {r.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
                       </div>
                       <div>
                         <div className="text-sm font-medium text-white">{r.name}</div>
@@ -116,6 +120,21 @@ export default function AttendanceManagementPage() {
                     </span>
                   </td>
                   <td className="px-5 py-4">
+                    {r.verified ? (
+                      <span
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20 cursor-help"
+                        title={r.checkInLat ? `GPS: ${r.checkInLat}, ${r.checkInLng} (${r.distance != null ? Math.round(r.distance) + 'm from branch' : 'On-Site'})` : 'Location verified'}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                        Verified {r.distance != null ? `(${Math.round(r.distance)}m)` : 'On-Site'}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs text-[#777]">
+                        {r.checkIn !== '--' ? '📍 Standard' : '--'}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-5 py-4">
                     <button className="text-xs px-2.5 py-1 rounded-lg transition-colors" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.08)' }}>
                       Correct
                     </button>
@@ -130,7 +149,7 @@ export default function AttendanceManagementPage() {
             <div key={r.id} className="p-4 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-9 h-9 rounded-full flex items-center justify-center font-heading font-bold text-xs flex-shrink-0" style={{ background: 'linear-gradient(135deg, #D4AF37, #A08820)', color: '#0A0A0A' }}>
-                  {r.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  {r.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
                 </div>
                 <div className="min-w-0">
                   <div className="text-sm font-medium text-white truncate">{r.name}</div>

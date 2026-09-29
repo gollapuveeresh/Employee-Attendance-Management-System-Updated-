@@ -25,17 +25,21 @@ class Command(BaseCommand):
 
         # 2. Branches
         branches_data = [
-            {'name': 'Mumbai HQ', 'city': 'Mumbai', 'is_headquarters': True, 'address': 'BKC, Bandra East, Mumbai'},
-            {'name': 'Bangalore', 'city': 'Bangalore', 'is_headquarters': False, 'address': 'Koramangala, Bangalore'},
-            {'name': 'Delhi', 'city': 'Delhi', 'is_headquarters': False, 'address': 'Connaught Place, New Delhi'},
-            {'name': 'Chennai', 'city': 'Chennai', 'is_headquarters': False, 'address': 'OMR, Chennai'},
+            {'name': 'Mumbai HQ', 'city': 'Mumbai', 'is_headquarters': True, 'address': 'BKC, Bandra East, Mumbai', 'latitude': 19.066000, 'longitude': 72.868700, 'radius_meters': 300, 'geofence_enabled': True},
+            {'name': 'Bangalore', 'city': 'Bangalore', 'is_headquarters': False, 'address': 'Koramangala, Bangalore', 'latitude': 12.935200, 'longitude': 77.624500, 'radius_meters': 300, 'geofence_enabled': True},
+            {'name': 'Delhi', 'city': 'Delhi', 'is_headquarters': False, 'address': 'Connaught Place, New Delhi', 'latitude': 28.631500, 'longitude': 77.216700, 'radius_meters': 300, 'geofence_enabled': True},
+            {'name': 'Chennai', 'city': 'Chennai', 'is_headquarters': False, 'address': 'OMR, Chennai', 'latitude': 12.971600, 'longitude': 80.245800, 'radius_meters': 300, 'geofence_enabled': True},
         ]
         branches = {}
         for b_data in branches_data:
-            branch, _ = Branch.objects.get_or_create(
+            branch, created = Branch.objects.get_or_create(
                 name=b_data['name'],
                 defaults={'company': company, **b_data}
             )
+            if not created:
+                for k, v in b_data.items():
+                    setattr(branch, k, v)
+                branch.save()
             branches[b_data['name']] = branch
 
         # 3. Departments
