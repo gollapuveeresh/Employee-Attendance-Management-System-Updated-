@@ -24,6 +24,8 @@ export default function AttendanceHistoryPage() {
           hours: r.working_hours > 0 ? `${r.working_hours}h` : (r.check_in && !r.check_out ? 'Live' : '--'),
           break: r.break_duration_seconds > 0 ? `${Math.round(r.break_duration_seconds / 60)}m` : '0m',
           status: r.status,
+          verified: r.is_location_verified,
+          distance: r.distance_from_branch_meters,
         })))
       }
     }).catch(() => {})
@@ -106,7 +108,7 @@ export default function AttendanceHistoryPage() {
           <table className="w-full">
             <thead>
               <tr style={{ borderBottom: '1px solid #1E1E1E' }}>
-                {['Date', 'Day', 'Check-in', 'Check-out', 'Working Hours', 'Break', 'Status'].map(h => (
+                {['Date', 'Day', 'Check-in', 'Check-out', 'Working Hours', 'Break', 'Status', 'Location'].map(h => (
                   <th key={h} className="px-5 py-3.5 text-left text-xs font-medium" style={{ color: '#6B6B6B' }}>{h}</th>
                 ))}
               </tr>
@@ -125,6 +127,18 @@ export default function AttendanceHistoryPage() {
                       {row.status}
                     </span>
                   </td>
+                  <td className="px-5 py-4">
+                    {row.verified ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                        Verified {row.distance != null ? `(${Math.round(row.distance)}m)` : 'On-Site'}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs text-[#777]">
+                        {row.checkIn !== '--' ? '📍 Standard' : '--'}
+                      </span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -139,6 +153,11 @@ export default function AttendanceHistoryPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-white">{row.date}</span>
                   <span className="text-xs" style={{ color: '#6B6B6B' }}>{row.day}</span>
+                  {row.verified && (
+                    <span className="text-[10px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded border border-green-500/20">
+                      ✓ GPS Verified
+                    </span>
+                  )}
                 </div>
                 <div className="text-xs mt-1" style={{ color: '#6B6B6B' }}>
                   {row.checkIn} → {row.checkOut} · {row.hours}

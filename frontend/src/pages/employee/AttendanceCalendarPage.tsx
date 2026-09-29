@@ -103,7 +103,7 @@ export default function AttendanceCalendarPage() {
             {cells.map((d, i) => {
               if (!d) return <div key={i} />
               const key = dateKey(d)
-              const status = mockData[key]
+              const status = recordsMap[key]
               const sc = status ? STATUS_COLORS[status] : null
               const today_ = isToday(d)
               const weekend = isWeekend(d)
@@ -178,10 +178,10 @@ export default function AttendanceCalendarPage() {
           {selected && (
             <div className="rounded-2xl p-5" style={{ background: '#111111', border: '1px solid rgba(212,175,55,0.2)' }}>
               <h3 className="font-heading font-semibold text-white text-sm mb-3">{selected}</h3>
-              {mockData[selected] ? (
+              {recordsMap[selected] ? (
                 <div>
-                  <span className="px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: STATUS_COLORS[mockData[selected]].bg, color: STATUS_COLORS[mockData[selected]].text }}>
-                    {mockData[selected]}
+                  <span className="px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: STATUS_COLORS[recordsMap[selected]].bg, color: STATUS_COLORS[recordsMap[selected]].text }}>
+                    {recordsMap[selected]}
                   </span>
                 </div>
               ) : (

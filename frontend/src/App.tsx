@@ -68,6 +68,11 @@ export interface AppUser {
   designation: string
   employeeId: string
   avatar?: string
+  branch?: string
+  branch_latitude?: number | null
+  branch_longitude?: number | null
+  branch_radius_meters?: number
+  branch_geofence_enabled?: boolean
 }
 
 const DEMO_USERS: Record<string, AppUser & { password: string }> = {
